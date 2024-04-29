@@ -1,0 +1,31 @@
+# Byte-compiled
+__pycache__/
+
+# Unit test
+.pytest_cache/
+
+# Flask stuff:
+#instance/
+#.webassets-cache
+
+# Jupyter Notebook
+#.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# PyCharm
+.idea/
