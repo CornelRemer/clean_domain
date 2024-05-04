@@ -7,26 +7,35 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+sqlalchemy = "*"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 mypy = "*"
 ruff = "*"
+factory-boy = "*"
 
 [tool.mypy]
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
-
-[tool.mypy-somelibrary]
 ignore_missing_imports = true
 
 [tool.ruff]
+src = ["blog"]
 line-length = 100
 
+[tool.ruff.lint]
+select = [
+    "I",  # isort
+    "F",  # flake8
+    "PL",  # pylint
+    "ARG",  # flake8-unused-arguments
+]
+
 [tool.ruff.format]
-indent-style = "tab"
+indent-style = "space"
 
 [build-system]
 requires = ["poetry-core"]
