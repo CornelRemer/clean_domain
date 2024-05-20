@@ -4,22 +4,32 @@ import factory
 import pytest
 from blog.blog_post import BlogPost
 from blog.orm import metadata, start_mappers
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine
 from sqlalchemy.orm import Session, clear_mappers, sessionmaker
 
-
-@pytest.fixture
-def in_memory_db() -> Engine:
-    engine = create_engine("sqlite:///:memory:")
-    metadata.create_all(engine)
-    return engine
+from tests.helper import DatabaseManager, DBSettings
 
 
 @pytest.fixture
-def session(in_memory_db: Engine) -> Generator[Session, None, None]:
+def postgres_engine() -> Generator[Engine, None, None]:
+    db_manager = DatabaseManager(settings=DBSettings.from_env())
+    with db_manager.database("test_db") as db_url:
+        with db_manager.engine(db_url) as engine:
+            metadata.create_all(engine)
+            yield engine
+
+
+@pytest.fixture
+def session(postgres_engine: Engine) -> Generator[Session, None, None]:
+    connection = postgres_engine.connect()
+    session = sessionmaker(bind=connection)()
     start_mappers()
-    yield sessionmaker(bind=in_memory_db)()
-    clear_mappers()
+    try:
+        yield session
+    finally:
+        session.close()
+        connection.close()
+        clear_mappers()
 
 
 @pytest.fixture

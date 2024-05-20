@@ -4,6 +4,7 @@
 Install following requirements to use this setup.
 * pyenv
 * poetry
+* make
 
 ### Pyenv
 Pyenv is used to create and manage different virtual python environments.
@@ -29,7 +30,12 @@ Add development dependencies with `poetry add "pytest@*" -D` to allow excluding 
 
 ## Static checks
 ### Typing
-`poetry run mypy .`
+`poetry run mypy .` or `make static-check`
 
 ### Formatter
 `poetry run ruff format .` Add `--check` for dry run.
+
+
+### Testing
+For integration tests with _Postgresql_ make sure a postgres instance is running: `make postgres-start`.
+User, password, port etc. must be given in `.env` on project level.

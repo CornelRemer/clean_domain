@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 sqlalchemy = "*"
+python-dotenv = "*"
+psycopg2-binary = "*"
 
 
 [tool.poetry.group.dev.dependencies]
