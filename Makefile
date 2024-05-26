@@ -1,5 +1,6 @@
 include .env
 
+# CODE CHECKS
 static-check:
 	@echo "" && echo "Check and fix code (pylint, isort)!"
 	@poetry run ruff check --fix
@@ -9,6 +10,7 @@ static-check:
 	@poetry run mypy .
 	@echo ""
 
+# POSTGRESQL
 postgres-start:
 	docker run -d --rm --name ${POSTGRES_CONTAINER_NAME} \
 	-e POSTGRES_USER=${POSTGRES_USER} \
@@ -20,3 +22,13 @@ postgres-stop:
 	docker stop clean_domain
 
 
+# ALEMBIC MIGRATION
+name?=blog
+upgrade-revision:
+	poetry run alembic -n $(name) upgrade head
+
+current-revision:
+	poetry run alembic -n $(name) current
+
+autogenerate-revision:
+	poetry run alembic -n $(name) revision --autogenerate -m "$(message)"

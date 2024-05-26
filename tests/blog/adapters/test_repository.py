@@ -2,8 +2,8 @@ import datetime as dt
 
 import factory
 import pytest
+from blog.adapters.repository import SqlAlchemyBlogPostRepository
 from blog.blog_post import BlogPost
-from blog.repository import SqlAlchemyBlogPostRepository
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

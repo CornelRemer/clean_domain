@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, MetaData, String, Table
+from sqlalchemy import Column, Date, DateTime, MetaData, String, Table, text
 from sqlalchemy.orm import registry
 
 from blog.blog_post import BlogPost
@@ -12,6 +12,7 @@ blog_posts = Table(
     Column("title", String),
     Column("content", String),
     Column("creation_date", Date, nullable=False),
+    Column("created_at", DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP")),
 )
 
 

@@ -2,8 +2,8 @@ from typing import Generator, Type
 
 import factory
 import pytest
+from blog.adapters.orm import metadata, start_mappers
 from blog.blog_post import BlogPost
-from blog.orm import metadata, start_mappers
 from sqlalchemy import Engine
 from sqlalchemy.orm import Session, clear_mappers, sessionmaker
 

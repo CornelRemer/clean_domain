@@ -10,6 +10,7 @@ python = "^3.10"
 sqlalchemy = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+alembic = "*"
 
 
 [tool.poetry.group.dev.dependencies]

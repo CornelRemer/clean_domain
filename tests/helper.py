@@ -17,6 +17,7 @@ class DBSettings:
     db_password: str
     db_host: str
     db_port: str
+    db_name: str
 
     @staticmethod
     def from_env() -> DBSettings:
@@ -28,13 +29,25 @@ class DBSettings:
             db_password=os.environ["POSTGRES_PASSWORD"],
             db_host=os.environ["POSTGRES_HOST"],
             db_port=os.environ["POSTGRES_PORT"],
+            db_name=os.environ.get("DATABASE_NAME", "postgres"),
+        )
+
+    def set_database_name(self, db_name: str) -> DBSettings:
+        self.db_name = db_name
+        return self
+
+    @property
+    def database_url(self) -> str:
+        return (
+            f"postgresql+psycopg2://{self.db_user}:{self.db_password}"
+            f"@{self.db_host}:{self.db_port}/{self.db_name}"
         )
 
 
 class DatabaseManager:
     def __init__(self, settings: DBSettings) -> None:
         self._settings = settings
-        self._maintenance_engine = create_engine(self._create_connection_string())
+        self._maintenance_engine = create_engine(self._settings.database_url)
 
     @contextmanager
     def engine(self, db_url: str) -> Generator[Engine, None, None]:
@@ -44,18 +57,12 @@ class DatabaseManager:
         finally:
             engine.dispose()
 
-    def _create_connection_string(self, db_name: str = "postgres") -> str:
-        return (
-            f"postgresql+psycopg2://{self._settings.db_user}:{self._settings.db_password}"
-            f"@{self._settings.db_host}:{self._settings.db_port}/{db_name}"
-        )
-
     @contextmanager
     def database(self, db_name: str) -> Generator[str, None, None]:
         unique_db_name = f"{db_name}_{secrets.token_hex(8)}"
         self._create(unique_db_name)
         try:
-            yield self._create_connection_string(unique_db_name)
+            yield self._settings.set_database_name(unique_db_name).database_url
         finally:
             self._drop(unique_db_name)
 
