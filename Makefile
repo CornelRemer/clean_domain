@@ -32,3 +32,9 @@ current-revision:
 
 autogenerate-revision:
 	poetry run alembic -n $(name) revision --autogenerate -m "$(message)"
+
+
+# RUN APPLICATION
+port?=5000
+start-dev:
+	FLASK_RUN_PORT=$(port) poetry run flask --app ./blog/entrypoints/flask_app run --debug
